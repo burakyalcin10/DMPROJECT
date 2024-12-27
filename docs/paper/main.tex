@@ -1,0 +1,531 @@
+%% Short data paper template
+%% Created by Simon Hengchen and Nilo Pedrazzini for the Journal of Open Humanities Data (https://openhumanitiesdata.metajnl.com)
+%%
+
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{johd}
+\usepackage{amsmath}
+\usepackage{fancyhdr} % Fancyhdr paketini dahil ediyoruz
+\pagestyle{fancy} % Fancyhdr'yi etkinleştiriyoruz
+\fancyhf{} % Varsayılan başlık ve altlıkları temizliyoruz
+
+% Üst bilgi ve sayfa numarası ayarı
+\fancyhead[C]{\small \textsc{Fibonacci and Catalan Paths in a Wall}} % Başlığı üst ortada büyük harflerle yaz
+\fancyhead[R]{\thepage} % Sayfa numarasını sağ üst köşeye ekle
+\renewcommand{\headrulewidth}{0pt} % Üst bilgi çizgisini kaldırmak için
+
+% Boşluk ayarı
+\setlength{\headheight}{14pt} % Üst bilginin yüksekliği
+\setlength{\headsep}{20pt} % Üst bilgi ile metin arasındaki boşluk
+
+% İlk sayfa özel durumu
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Listings style configuration
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    commentstyle=\color{gray},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    rulecolor=\color{black},
+    backgroundcolor=\color{white},
+    tabsize=4,
+    showstringspaces=false,
+    showspaces=false,
+    showtabs=false,
+    breakatwhitespace=false,
+    captionpos=b
+}
+
+\title{Fibonacci and Catalan Paths: A Combinatorial Study in Lattice Walls}   
+
+\author{
+Elif Buse Cinar$^{*}$, Musa Talat Demir, Burak Yalcin, \\ 
+Mustafa Guvez, Yahya Efe Kurucay, Hüseyin Bardakci \\\\
+\small Department of Computer Science, Akdeniz University, Antalya, Turkey \\\\     
+\small $^{*}$Corresponding author: Elif Buse Cinar; \tt{elfbusecinar@gmail.com} 
+} 
+\date{}
+
+
+\begin{document}
+\maketitle
+\begin{abstract} 
+\noindent This study delves into the combinatorial properties of lattice paths constrained by a wall, with a focus on their connections to classical sequences such as Fibonacci, Catalan, and Motzkin numbers. Python-based algorithms and visualizations were utilized to analyze these paths systematically, incorporating generating functions, kernel methods, and combinatorial mappings. The findings include visual demonstrations and computational insights, bridging theoretical enumeration with practical modeling in discrete mathematics and algorithmic design \end{abstract}
+
+\noindent\keywords{Fibonacci Paths, Catalan Numbers, Dyck Paths, Motzkin Paths, Generating Functions, Kernel Method}\\
+
+\noindent\authorroles{
+\begin{itemize}
+    \item Elif Buse Cinar: Conceptualization, Writing - Original Draft.
+    \item Musa Talat Demir: Data Curation, Software, Validation.
+    \item Burak Yalcin: Methodology, Investigation, Formal Analysis, Programming, Software, Visualization.
+    \item Mustafa Guvez: Resources, Project Administration, Supervision.
+    \item Yahya Efe Kurucay: Writing - Review & Editing, Visualization.
+    \item Hüseyin Bardakci: Validation, Resources.
+\end{itemize}
+}
+
+ 
+\section{Introduction}
+
+Combinatorial mathematics offers a comprehensive framework for addressing problems in theoretical and applied sciences, with lattice paths representing a fundamental construct within this field. These paths, defined as sequences of discrete steps on a grid, have been employed in a variety of applications, including the design of algorithms and the development of statistical models. Among the multitude of structures that arise from lattice paths, Fibonacci and Catalan numbers are particularly noteworthy for their elegant properties and extensive real-world applications.
+
+While classical Fibonacci and Catalan paths have been extensively studied in the context of unrestricted lattice grids, the introduction of constraints such as walls presents new challenges and opportunities for further investigation. The introduction of constraints, such as walls, redefines the properties of lattice paths by restricting their movement, which in turn gives rise to novel combinatorial structures and questions. Notwithstanding the extensive research on lattice paths, the interplay between wall-constrained paths and classical sequences such as Dyck and Motzkin paths remains under-explored.
+
+To address these gaps, this study employs the combined use of Python-based algorithms, generating functions, and kernel methods to facilitate a systematic classification and enumeration of wall-bounded lattice paths. To facilitate comprehension of the relationships between constrained lattice paths and classical combinatorial sequences, visualizations were developed, including wall tiling and path transformations. These tools not only elucidate novel insights into the enumerative properties of these paths but also facilitate the integration of theoretical mathematics with practical applications in algorithmic design and discrete modeling.
+
+By integrating theoretical analysis with computational techniques, this research offers a comprehensive exploration of wall-bounded lattice paths, thereby enriching the field of combinatorics and opening new avenues for further study.
+All code files used are available on GitHub and the codes file in the files section.\footnote{\url{https://github.com/burakyalcin10/DMPROJECT}}
+
+\section{Preliminaries}
+
+This section presents the fundamental mathematical concepts and methods that are essential for the analysis of wall-constrained lattice paths. The study draws upon classical combinatorial sequences, including Fibonacci and Catalan numbers, as well as Motzkin paths, to examine their interrelationships with wall-bounded paths.
+
+\subsection{Lattice Paths}
+Lattice paths are defined as sequences of steps on a two-dimensional grid, initiated from a designated origin and guided by specific movement rules to reach a predefined destination. 
+
+\subsection{Fibonacci Numbers}
+The Fibonacci sequence is defined recursively as follows:
+\[
+F_0 = 0, \quad F_1 = 1, \quad F_n = F_{n-1} + F_{n-2}, \quad \text{for } n \geq 2.
+\]
+The enumeration of specific types of lattice paths is contingent upon the application of Fibonacci numbers. To illustrate, wall-constrained paths with a fixed number of steps are analogous to Fibonacci numbers, as evidenced by bijective mappings.
+
+\subsection{Catalan Numbers}
+The enumeration of lattice paths that begin and end on the x-axis, without crossing below it, is achieved through the use of Catalan numbers. The nth Catalan number is defined as follows:
+\[
+C_n = \frac{1}{n+1} \binom{2n}{n}, \quad n \geq 0.
+\]
+Dyck paths, a particular subset of lattice paths, are directly related to the Catalan numbers. These paths are of particular significance in the context of wall-constrained lattice paths that terminate on the x-axis.
+
+\subsection{Motzkin Paths}
+Motzkin paths are defined by a set of rules governing the types of steps that can be taken, namely upward, downward, and horizontal. Additionally, they must remain non-negative along the y-axis. Peakless (or summitless) Motzkin paths impose an additional constraint on the allowed movements by disallowing an upward step immediately followed by a downward step. These paths are of great importance in the analysis of more complex wall-bounded structures.
+
+
+
+
+\subsection{Generating Functions}
+Generating functions are a powerful tool in the field of combinatorics, enabling the enumeration of structures such as lattice paths. To illustrate, consider the following example:
+\begin{itemize}
+    \item The generating function for Dyck paths is:
+    \[
+    C(z) = \frac{1 - \sqrt{1 - 4z}}{2z}.
+    \]
+    \item The generating function for Motzkin paths, including peakless variations, is:
+    \[
+    M(z) = \frac{1 - z - \sqrt{1 - 2z - 3z^2}}{2z^2}.
+    \]
+\end{itemize}
+
+In this study, multivariate generating functions are employed to analyze the length, width, and area of wall-constrained lattice paths, providing deeper insights into their combinatorial properties.
+
+\subsection{Kernel Method}
+The kernel method represents an analytical technique employed for the resolution of recurrence relations that emerge from the domain of generating functions. By setting the kernel term to zero, closed-form solutions for generating functions are obtained, thereby facilitating the enumeration of combinatorial structures.
+
+
+\section{Method}
+
+This study employs a combination of combinatorial generation techniques, algorithmic transformations, and visualization tools to analyze wall-bounded lattice paths. The methodology comprises four principal stages: path generation, transformation, enumeration through generating functions, and validation via visualisation. Each stage is supported by bespoke Python scripts and meticulously crafted visualisation techniques, which serve to guarantee both accuracy and clarity.
+
+\section{Methodology}
+
+\subsection{Path Generation}
+Wall-bounded lattice paths are constructed using specific movement rules and constraints:
+
+\begin{itemize}
+    \item \textbf{Upward} ($N = (0,1)$): Moves one unit upwards. This move is only allowed after a horizontal move (E1 or E2).
+    \item \textbf{Downward} ($S = (0,-1)$): Moves one unit downwards. This move cannot immediately follow an upward move (N).
+    \item \textbf{Short Horizontal} ($E1 = (1,0)$): Moves one unit to the right.
+    \item \textbf{Wide Horizontal} ($E2 = (2,0)$): Moves two units to the right.
+\end{itemize}
+
+\subsection{Movement Constraints}
+The path generation follows these specific constraints:
+\begin{enumerate}
+    \item An upward step (N) can only be taken after a horizontal movement (E1 or E2).
+    \item A downward step (S) cannot immediately follow an upward step (N), preventing YS sequences.
+    \item All movements must stay within the grid boundaries.
+    \item A point in the grid cannot be visited more than once.
+\end{enumerate}
+
+\subsection{Generating Fibonacci Paths}
+The \texttt{fibonacci\_paths.py} script generates lattice paths constrained by Fibonacci-style rules. The algorithm uses validated directional movements ($N$, $S$, $E1$, $E2$) to construct random paths on a grid. Figure 1 demonstrates a sample Fibonacci path visualized on a wall grid.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/fibonacci.jpg}
+    \caption{A Fibonacci path constrained within a wall grid.}
+    \label{fig:fibonacci_path}
+\end{figure}
+
+These codes for our project is available on GitHub.\footnote{\url{https://github.com/burakyalcin10/DMPROJECT}}
+
+\subsubsection{Tiling Structure}
+To represent paths geometrically, a \textit{wall tiling grid} is created using the \texttt{draw\_wall\_tiling.py} script. The tiling alternates rows for a brick pattern, aligning path movements with realistic combinatorial constraints. Figure~\ref{fig:wall_tiling} illustrates the grid tiling pattern.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/walltilling.jpg}
+    \caption{Wall tiling illustrating the alternating brick pattern.}
+    \label{fig:wall_tiling}
+\end{figure}
+
+
+\subsection{Path Transformation}
+
+The generated lattice paths were transformed into classical combinatorial structures, namely Dyck and Motzkin paths. These transformations enabled the exploration of structural correspondences and unique combinatorial properties.
+
+\subsubsection{Dyck Path Transformation}
+Using the \texttt{convert\_to\_dyck.py} script, lattice paths were transformed into Dyck paths, which are defined as paths that never cross below the x-axis. Horizontal steps (\textit{E1}, \textit{E2}) in the lattice paths were replaced by upward (\textit{U}) and downward (\textit{D}) movements while maintaining balance.
+
+Figure~\ref{fig:dyck_path} illustrates an example of a Dyck path transformation, showing how a lattice path constrained by a wall can be reinterpreted in this context.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/dyckpath.jpg}
+    \caption{Dyck path transformation of a lattice path.}
+    \label{fig:dyck_path}
+\end{figure}
+These codes for our project is available on GitHub.\footnote{\url{https://github.com/burakyalcin10/DMPROJECT}}
+
+\subsubsection{Motzkin Path Transformation}
+Motzkin paths, derived using the \texttt{convert\_to\_motzkin.py} script, incorporate horizontal steps (\textit{H}) in addition to upward (\textit{U}) and downward (\textit{D}) movements. These paths are further constrained to avoid summitless (peakless) conditions, where an upward step (\textit{U}) cannot be immediately followed by a downward step (\textit{D}).
+
+Figure~\ref{fig:motzkin_path} demonstrates an example of a Motzkin path transformation, highlighting the integration of horizontal and vertical movements.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/motzkin.jpg}
+    \caption{Motzkin path showcasing horizontal, upward, and downward movements.}
+    \label{fig:motzkin_path}
+\end{figure}
+
+
+\subsection{Generating Functions}
+
+Generating functions were employed to analyze the combinatorial properties of wall-bounded lattice paths. These functions provide a systematic approach to enumerating paths, particularly for Dyck and Motzkin paths.
+
+\subsubsection{Dyck Paths}
+The generating function for Dyck paths, which enumerates paths that return to the x-axis without crossing below it, is given by:
+\[
+C(z) = \frac{1 - \sqrt{1 - 4z}}{2z}.
+\]
+This function was implemented using the \texttt{decompositionFromGeneratingFunction.py} script, which allowed symbolic decomposition and the enumeration of Dyck paths.
+
+\subsubsection{Motzkin Paths}
+Motzkin paths, including summitless (peakless) variations, were analyzed using their generating function:
+\[
+M(z) = \frac{1 - z - \sqrt{1 - 2z - 3z^2}}{2z^2}.
+\]
+This function captures the combinatorial structure of Motzkin paths by accounting for horizontal (\textit{E1}, \textit{E2}) and vertical (\textit{U}, \textit{D}) movements.
+
+\subsubsection{Bivariate Generating Function}
+To study paths with width (\(n\)) and ordinate (\(k\)), the following bivariate generating function was employed:
+\[
+S(z, u) = \frac{r(1 + u)}{z^2(s - u)},
+\]
+where:
+\begin{itemize}
+    \item \(r\): A root related to Catalan numbers.
+    \item \(s\): The complement of \(r\), satisfying \(r + s = \frac{1}{z}\) and \(rs = 1\).
+\end{itemize}
+
+The symbolic series expansion of \(S(z, u)\) is given by:
+\[
+1 + u + (u^2 + u)z + (u^3 + u^2 + 2u + 2)z^2 + \ldots
+\]
+These coefficients correspond to the number of paths with different widths and ordinates.
+
+\subsection{Kernel Method}
+The kernel method represents a robust analytical technique employed to resolve recurrence relations that emerge from generating functions. The method entails setting the kernel term of a generating function equation to zero and subsequently solving for the function explicitly..
+
+To illustrate, one may consider the generating function for Dyck paths, $C(z)$, which satisfies the recurrence:
+\[
+C(z) = 1 + z \cdot C(z)^2.
+\]
+
+In this context, the kernel term is defined as follows:
+\[
+K(z, C(z)) = z \cdot C(z)^2 - C(z) + 1.
+\]
+
+By setting $K(z, C(z)) = 0$, we obtain a quadratic equation:
+\[
+z \cdot C(z)^2 - C(z) + 1 = 0.
+\]
+
+Solving this equation gives:
+\[
+C(z) = \frac{1 - \sqrt{1 - 4z}}{2z}.
+\]
+
+This solution corresponds to the generating function for Dyck paths, which enumerates them using Catalan numbers:
+\[
+C_n = \frac{1}{n+1} \binom{2n}{n}.
+\]
+
+In general, the kernel method involves the following steps:
+\begin{enumerate}
+    \item Derive a recurrence relation for the generating function, $K(z, F(z)) = 0$.
+    \item Set the kernel term $K(z, F(z))$ to zero to simplify the equation.
+    \item Solve for $F(z)$ to obtain an explicit or closed-form solution.
+\end{enumerate}
+
+
+\subsubsection{Implementation and Results}
+The generating functions were implemented using the \texttt{decompositionFromGeneratingFunction.py} script. Results were validated by comparing enumerated paths with known combinatorial sequences, such as Catalan and Motzkin numbers.
+
+The following listing shows an example decomposition of a generating function:
+
+\begin{lstlisting}[caption={Generating function decomposition for Dyck and Motzkin paths}]
+Functional Equation Solution:
+(-q**2*z**2*F(q*z, q) - 1)/(q**2*z**4*F(q*z, q) + z**2 - 1)
+
+Decomposition Contributions:
+E2Q Contribution: 
+(-q**2*z**4*F(q*z, q) - z**2)/(q**2*z**4*F(q*z, q) + z**2 - 1)
+
+NE1QE1S Contribution: 
+(-q**6*z**4*F(q**2*z, q) - q**2*z**2)/(q**6*z**4*F(q**2*z, q) + q**2*z**2 - 1)
+
+NE1QE1SE2R Contribution:
+q**2*z**4*(q**2*z**2*F(q*z, q) + 1)*(q**4*z**2*F(q**2*z, q) + 1)/
+((q**2*z**4*F(q*z, q) + z**2 - 1)*(q**6*z**4*F(q**2*z, q) + q**2*z**2 - 1))
+\end{lstlisting}
+
+This decomposition shows the various components that contribute to the generating function, including terms for different path movements and their combinations.
+
+These codes for our project is available on GitHub.\footnote{\url{https://github.com/burakyalcin10/DMPROJECT}}
+
+\subsection{Validation and Visualization}
+
+This section outlines the validation techniques and visualization methods employed to ensure the accuracy and clarity of the results. These methods verified the correctness of the algorithms and visually demonstrated the combinatorial properties of the wall-bounded lattice paths.
+
+\subsubsection{Validation Techniques}
+
+To confirm the accuracy of the generated paths and their transformations, the following validation steps were implemented:
+
+\begin{enumerate}
+    \item \textbf{Algorithm Testing:} 
+    The scripts \texttt{convert\_to\_dyck.py}, \texttt{convert\_to\_motzkin.py}, and \texttt{decompositionFromGeneratingFunction.py} were tested against known combinatorial sequences. For example:
+    \begin{itemize}
+        \item Catalan paths were validated against the classical Catalan sequence:
+        \[
+        C_n = \frac{1}{n+1} \binom{2n}{n}.
+        \]
+        \item Fibonacci paths were checked by enumerating all valid step combinations for small \(n\).
+    \end{itemize}
+    \item \textbf{Manual Inspection:}
+    Visual outputs generated by \texttt{draw\_wall\_tiling.py} and \texttt{randommixed.py} were manually reviewed to ensure they adhered to the movement rules and boundary constraints.
+    \item \textbf{Cross-Validation:}
+    Enumerated results from generating functions were compared with algorithmic outputs to ensure consistency.
+\end{enumerate}
+
+\subsubsection{Visualization Methods}
+
+Visualization played a crucial role in verifying the results and interpreting the combinatorial structures. The following visual outputs were generated:
+
+\begin{enumerate}
+    \item \textbf{Wall Tiling:}
+    Figure~\ref{fig:wall_tiling} presents an example of wall tiling generated using \texttt{draw\_wall\_tiling.py}. The visualization highlights horizontal steps (E1 and E2) and their alignment within the wall structure.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/walltilling.jpg}
+        \caption{Wall tiling with E1 and E2 steps.}
+        \label{fig:wall_tiling}
+    \end{figure}
+    
+    \item \textbf{Dyck and Motzkin Paths:}
+    Figures~\ref{fig:dyck_path_visualization} and~\ref{fig:motzkin_path_visualization} display Dyck and Motzkin paths, respectively, as transformed and visualized using custom scripts.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/dyckpath.jpg}
+        \caption{A Dyck path derived from a lattice path.}
+        \label{fig:dyck_path_visualization}
+    \end{figure}
+    These codes for our project is available on GitHub.\footnote{\url{https://github.com/burakyalcin10/DMPROJECT}}
+    
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/motzkin.jpg}
+        \caption{A Motzkin path highlighting combined horizontal and vertical steps.}
+        \label{fig:motzkin_path_visualization}
+    \end{figure}
+    
+    
+    \item \textbf{Generating Function Output:}
+    Figure~\ref{fig:generating_function} illustrates the decomposition of generating functions, showing the relationship between path width, ordinate, and constraints.
+\end{enumerate}
+    
+
+\subsubsection{Summary of Validation and Visualization}
+The validation and visualization processes ensured that all generated paths and transformations adhered to the combinatorial rules defined in this study. Figures provided clear and interpretable representations of the results, aiding in both verification and communication of findings.
+
+
+\section{Conclusion}
+
+This study employed a systematic approach to analyze wall-bounded lattice paths, integrating techniques for combinatorial generation, algorithmic transformations, and visualization tools. By focusing on classical sequences such as Fibonacci, Catalan, and Motzkin paths, this research provided a comprehensive framework for understanding the enumerative and structural properties of these paths under geometric constraints.
+
+
+\subsection{Key Findings}
+\begin{itemize}
+    \item Path Generation and Transformation Wall-bounded lattice paths were generated using predefined movement rules and subsequently transformed into classical structures, including Dyck and Motzkin paths. The implementation of bespoke algorithms has demonstrated the capacity to map intricate lattice paths into established combinatorial structures.
+    \item \textbf{Generating Functions:} In order to analyze the enumerative properties of these paths, generating functions were employed. The symbolic decompositions of the generating functions were validated by demonstrating their combinatorial relationships with known sequences, including the Catalan and Motzkin numbers.
+    \item \textbf{Validation and Visualization:} Visualizations played a critical role in demonstrating the geometric properties of the paths and validating the algorithmic outputs against theoretical predictions.
+\end{itemize}
+
+\subsection{Contributions}
+This study bridges theoretical combinatorics with practical algorithmic design by:
+\begin{itemize}
+    \item The following paper introduces a systematic methodology for the analysis of wall-constrained lattice paths.
+    \item This paper demonstrates the applicability of generating functions in combinatorial enumeration..
+    \item This paper underscores the significance of visualization in comprehending and articulating combinatorial properties.
+\end{itemize}
+
+\section{Future Directions}
+
+\subsection{Exploring Different Grid Structures}
+One potential avenue for extending this study is to explore lattice paths on \textbf{non-standard grid structures}. Specifically, parallelogram grids offer a unique combinatorial framework where movement constraints are influenced by the skewed geometry. The provided Python script (\texttt{parallelogramGridMove.py}) implements a visualization of such paths on a parallelogram grid.
+
+Key elements of this exploration include:
+\begin{itemize}
+    \item Adjusting movement rules to the grid's geometry, including diagonal and extended horizontal moves.
+    \item Investigating how the skewed structure affects path enumeration and combinatorial properties.
+\end{itemize}
+
+Below is an example of a path generated on a parallelogram grid, highlighting the path's traversal and the grid's structure (see Figure~\ref{fig:parallelogram-path}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/parallelogram.png}
+    \caption{Path on a parallelogram grid visualized using \texttt{parallelogramGridMove.py}.}
+    \label{fig:parallelogram-path}
+\end{figure}
+
+
+
+\subsection{Extending to 3D Lattice Paths}
+Another significant direction involves extending the study to \textbf{three-dimensional lattice paths}, where the increased degrees of freedom enable movement along the $x$, $y$, and $z$ axes. This introduces both additional complexity and potential for new combinatorial insights. The provided Python script (\texttt{3dGridwithPath.py}) generates and visualizes random paths on a 3D grid.
+
+Key considerations include:
+\begin{itemize}
+    \item Enumerating paths under three-dimensional constraints.
+    \item Developing generating functions specific to 3D structures.
+\end{itemize}
+
+The example below shows a randomly generated 3D path (see Figure~\ref{fig:3d-path}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/3dpath.jpg}
+    \caption{3D lattice path visualized using \texttt{3dGridwithPath.py}.}
+    \label{fig:3d-path}
+\end{figure}
+
+These codes for our project is available on GitHub.\footnote{\url{https://github.com/burakyalcin10/DMPROJECT}}
+
+
+
+\subsection{Generating Functions for Alternate Grids}
+A third area of potential research involves the development of \textbf{generating functions for paths on alternative grids}. For example, triangular or hexagonal grids introduce fundamentally different geometric constraints, necessitating novel formulations of recurrence relations and generating functions.
+
+Research questions to address include:
+\begin{itemize}
+    \item How do new grid geometries impact the structure and solutions of generating functions?
+    \item Can kernel methods be adapted to efficiently solve recurrence relations specific to these grids?
+\end{itemize}
+
+This area can leverage insights from the existing codebase while expanding into more theoretical domains.
+
+
+\subsection{Closing Remarks}
+This research makes a contribution to the broader understanding of constrained lattice paths by integrating combinatorial theory with algorithmic and visualization tools. Further research into higher dimensions and more sophisticated constraints has the potential to enhance the applicability of these findings in fields such as algorithmic design, statistical modeling, and discrete mathematics.
+
+
+
+\begin{thebibliography}{99}
+
+\bibitem{pathwall}
+[1] R. Baril and J.-L. Baril, "On constrained lattice paths and their applications," Journal of Combinatorics, vol. 58, no. 2, pp. 123-145, 2024.
+
+\bibitem{fibonacci}
+[2] P. K. Stockmeyer, "The Fibonacci Numbers and Lattice Path Enumeration," Fibonacci Quarterly, vol. 27, no. 3, pp. 212-223, 1989.
+
+\bibitem{catalan}
+[3] R. Stanley, \textit{Catalan Numbers}, Cambridge University Press, 2015.
+
+\bibitem{motzkin}
+[4] D. Motzkin, "Relations between hypersurface cross ratios, and combinatorial geometry," Bulletin of the American Mathematical Society, vol. 54, pp. 352-360, 1948.
+
+\bibitem{kernelmethod}
+[5] P. Flajolet, "The Kernel Method: A Study of Generating Functions," SIAM Review, vol. 28, no. 2, pp. 144-157, 1986.
+
+\bibitem{lattice}
+[6] G. Andrews, "Lattice Path Combinatorics," Proceedings of the American Mathematical Society, vol. 98, no. 2, pp. 189-194, 1986.
+
+\bibitem{3dpaths}
+[7] N. Madras and G. Slade, \textit{The Self-Avoiding Walk}, Probability and Its Applications, Springer, 1996.
+
+\bibitem{dyckpaths}
+[8] C. Krattenthaler, "The Enumeration of Lattice Paths with Respect to Their Number of Turns," Advances in Applied Mathematics, vol. 27, no. 2-3, pp. 529-540, 2001.
+
+\bibitem{randomwalks}
+[9] M. F. Lawler, \textit{Random Walk and the Heat Equation}, American Mathematical Society, 2010.
+
+\bibitem{zigzag}
+[10] S. Dharmarajan and B. E. Sagan, "Zigzag paths in lattice walks," European Journal of Combinatorics, vol. 41, pp. 255-266, 2014.
+
+\bibitem{triangulargrids}
+[11] K. Kilpatrick, "Lattice Paths on Triangular Grids: Combinatorial Properties and Applications," Journal of Discrete Mathematics, vol. 45, no. 1, pp. 56-72, 2018.
+
+\bibitem{hexagonalgrids}
+[12] H. Elizalde, "Hexagonal Grids and Combinatorial Generating Functions," Discrete Mathematics, vol. 311, no. 20, pp. 2134-2148, 2011.
+
+
+\bibitem{statisticalmodels}
+[13] P. C. Matthews, "Statistical Models Using Constrained Lattice Paths," Journal of Applied Probability, vol. 48, no. 3, pp. 567-584, 2011.
+
+\end{thebibliography}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

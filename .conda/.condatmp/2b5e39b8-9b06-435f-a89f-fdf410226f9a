@@ -1,0 +1,13 @@
+prefix=d:/Projects/Fibonacci-Catalan-Lattice-Paths/.conda/Library
+exec_prefix=d:/Projects/Fibonacci-Catalan-Lattice-Paths/.conda/Library
+libdir=d:/Projects/Fibonacci-Catalan-Lattice-Paths/.conda/Library/lib
+sharedlibdir=d:/Projects/Fibonacci-Catalan-Lattice-Paths/.conda/Library/lib
+includedir=d:/Projects/Fibonacci-Catalan-Lattice-Paths/.conda/Library/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
