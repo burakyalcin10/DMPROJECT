@@ -47,7 +47,7 @@ pip install -r requirements.txt
 
 ```bash
 git clone https://github.com/burakyalcin10/DMPROJECT
-cd Fibonacci-Catalan-Lattice-Paths
+cd DMPROJECT
 ```
 
 ## 📊 Features
