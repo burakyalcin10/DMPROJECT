@@ -47,7 +47,7 @@ pip install -r requirements.txt
 
 ```bash
 git clone https://github.com/burakyalcin10/DMPROJECT
-cd Fibonacci-Catalan-Lattice-Paths
+cd DMPROJECT
 ```
 
 ## 📊 Features
@@ -78,9 +78,6 @@ The complete paper can be found in the `docs/paper` directory.
 - Yahya Efe Kurucay - Review & Editing, Visualization
 - Huseyin Bardakci - Validation, Resources
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 📚 References
 
